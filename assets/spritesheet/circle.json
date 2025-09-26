@@ -241,7 +241,7 @@
 	"sourceSize": {"w":140,"h":140}
 }},
 "animations": {
-	"circle": ["circle0001.png","circle0002.png","circle0003.png","circle0004.png","circle0005.png","circle0006.png","circle0007.png","circle0008.png","circle0009.png","circle0010.png","circle0011.png","circle0012.png","circle0013.png","circle0014.png","circle0015.png","circle0016.png","circle0017.png","circle0018.png","circle0019.png","circle0020.png","circle0021.png","circle0022.png","circle0023.png","circle0024.png","circle0025.png","circle0026.png","circle0027.png","circle0028.png","circle0029.png","circle0030.png"]
+	"alien": ["circle0001.png","circle0002.png","circle0003.png","circle0004.png","circle0005.png","circle0006.png","circle0007.png","circle0008.png","circle0009.png","circle0010.png","circle0011.png","circle0012.png","circle0013.png","circle0014.png","circle0015.png","circle0016.png","circle0017.png","circle0018.png","circle0019.png","circle0020.png","circle0021.png","circle0022.png","circle0023.png","circle0024.png","circle0025.png","circle0026.png","circle0027.png","circle0028.png","circle0029.png","circle0030.png"]
 },
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",

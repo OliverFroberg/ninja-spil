@@ -1,17 +1,40 @@
 {
-  "name": "ninja-spil",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "my_boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve --open",
+    "build": "webpack --watch",
+    "prod": "webpack --config prod.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "css-loader": "^6.5.1",
+    "file-loader": "^6.2.0",
+    "gsap": "^3.9.1",
+    "howler": "^2.2.3",
+    "html-webpack-plugin": "^5.5.0",
+    "pixi-spine": "^4.0.4",
+    "pixi.js": "^7.2.4",
+    "sass": "^1.49.4",
+    "sass-loader": "^12.4.0",
+    "set-random-interval": "^1.1.0",
+    "style-loader": "^3.3.1",
+    "three": "^0.158.0",
+    "url-loader": "^4.1.1"
   },
   "devDependencies": {
-    "vite": "^7.1.7"
-  },
-  "dependencies": {
-    "pixi.js": "^8.13.2"
+    "@babel/core": "^7.16.12",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.3",
+    "copy-webpack-plugin": "^10.2.4",
+    "terser-webpack-plugin": "^5.3.3",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.2"
   }
 }
