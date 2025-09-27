@@ -98,7 +98,7 @@ let enemySpawnerInterval: number;
 		// Enemy spawner
 		enemySpawnerInterval = setInterval(() => {
 			scene.addChild(Enemy.createNewEnemy())
-		}, 3000);
+		}, 1000);
 	});
 })();
 

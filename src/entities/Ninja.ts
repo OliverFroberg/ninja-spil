@@ -12,7 +12,7 @@ export default class Ninja extends Entity {
 	private readonly hurtSprite: Sprite;
 
 	private declare defaultPosition: Point;
-	public startingAttack = false;
+	public doingAttack = false;
 	public attacking = false;
 
 	constructor() {
@@ -51,7 +51,7 @@ export default class Ninja extends Entity {
 		}
 
 		this.sprite = this.kickSprite;
-		this.startingAttack = true;
+		this.doingAttack = true;
 		this.currentAnimation = gsap.to(this.position, {
 			duration: 0.2,
 			x: x,
@@ -60,7 +60,6 @@ export default class Ninja extends Entity {
 
 			onComplete: () => {
 				this.sprite = this.idleSprite;
-				this.startingAttack = false;
 				this.attacking = true;
 				this.currentAnimation = gsap.to(this.position, {
 					delay: 0.1,
@@ -72,6 +71,10 @@ export default class Ninja extends Entity {
 					onStart: () => {
 						this.attacking = false;
 					},
+
+					onComplete: () => {
+						this.doingAttack = false;
+					}
 				});
 			},
 		});

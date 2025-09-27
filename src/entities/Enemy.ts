@@ -31,15 +31,13 @@ export class Enemy extends Entity {
 	}
 
 	update(time: Ticker) {
-		const movement = this.direction * 1.5 * time.deltaTime;
+		const movement = this.direction * time.deltaTime * (time.lastTime / 10000);
 		this.position.x -= movement;
 
 		if (this.checkCollision(ninja)) {
 			if (ninja.attacking) {
 				this.kill()
-			} else if (ninja.startingAttack) {
-				// Do nothing
-			} else {
+			} else if (!ninja.doingAttack) {
 				ninja.damage()
 			}
 		}
