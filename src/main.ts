@@ -1,6 +1,7 @@
-import {Application, Assets, Container, Point, Sprite} from "pixi.js";
+import {Application, Assets, Container, Sprite, Ticker} from "pixi.js";
 import Ninja from "./entities/Ninja.ts";
 import gsap from "gsap";
+import {Enemy} from "./entities/Enemy.ts";
 
 Assets.addBundle("ninjas", {
 	ninja: "/assets/spritesheet/ninjarack.json",
@@ -8,11 +9,16 @@ Assets.addBundle("ninjas", {
 	ninjaHurt: "/assets/images/ninja-hurt.png",
 	background: "/assets/images/background.jpg",
 	play: "/assets/images/play.png",
-	alienSpine: "/assets/spritesheet/alien-spine/alienboss.json",
+	alienSpineJson: "/assets/spritesheet/alien-spine/alienboss.json",
+	alienSpineAtlas: "/assets/spritesheet/alien-spine/alienboss.atlas",
 });
 
 export let assets: any;
 export let scene: Container;
+export let ninja: Ninja;
+
+let enemyTicker: Ticker;
+let enemySpawnerInterval: number;
 
 (async () => {
 	//========================== Initialize Application ==========================
@@ -31,33 +37,33 @@ export let scene: Container;
 
 	//========================== Create Environment ==========================
 
-	scene = new Container();
-	scene.label = "scene";
-	scene.position.set(app.screen.width / 2, app.screen.height / 2);
-	scene.zIndex = 1;
-	app.stage.addChild(scene);
-
 	const background = Sprite.from(assets.background);
 	background.label = "background";
 	background.position.set(app.screen.width / 2, app.screen.height / 2);
 	background.pivot.set(background.width / 2, background.height / 2);
-	const originalRatio = background.width / background.height;
-	background.width = app.screen.height * originalRatio;
-	background.height = app.screen.height;
+	const scaleFactor = window.innerHeight / background.height;
+	background.scale.set(scaleFactor);
 	background.eventMode = "static";
 	app.stage.addChild(background);
+
+	scene = new Container();
+	scene.label = "scene";
+	scene.position.set(app.screen.width / 2, app.screen.height / 2);
+	scene.scale.set(scaleFactor);
+	scene.zIndex = 1;
+	app.stage.addChild(scene);
 
 
 	//========================== Create Entities ==========================
 
 	// Create Ninja Entity (The Player)
-	const ninja = new Ninja();
+	ninja = new Ninja();
 	scene.addChild(ninja);
 
 
 	//========================== Start Screen ==========================
 
-	const play = Sprite.from(assets["play"]);
+	const play = Sprite.from(assets.play);
 	play.anchor.set(0.5);
 	play.position.set(0, -250);
 	play.eventMode = "static";
@@ -67,6 +73,7 @@ export let scene: Container;
 	//========================== Begin game ==========================
 
 	play.on("pointerup", event => {
+		event.currentTarget.eventMode = "passive"
 		// Animate play button out of screen
 		gsap.to(event.currentTarget, {
 			duration: 0.5,
@@ -76,21 +83,26 @@ export let scene: Container;
 		});
 
 		// Click attack
-		app.canvas.addEventListener("pointerdown", (event) => {
-			const rect = app.canvas.getBoundingClientRect();
-			const x = event.clientX - rect.left;
-			const y = event.clientY - rect.top;
-
-			ninja.attackAt(x - scene.x, y - scene.y);
+		background.on("pointerdown", event => {
+			const position = event.getLocalPosition(background);
+			ninja.attackAt(position.x - background.pivot.x, position.y - background.pivot.y);
 		});
-		// background.on("pointerdown", event => {
-		// 	let newPosition = event.getLocalPosition(background);
-		// 	newPosition = new Point(newPosition.x - background.pivot.x, newPosition.y - background.pivot.y)
-		// 	console.log(newPosition);
-		// 	ninja.attackAt(newPosition.x, newPosition.y);
-		// });
 
-		app.ticker.add((time) => {
+		// Enemy updater
+		enemyTicker = app.ticker.add((time) => {
+			Enemy.enemies.forEach(enemy => {
+				enemy.update(time);
+			})
 		});
+
+		// Enemy spawner
+		enemySpawnerInterval = setInterval(() => {
+			scene.addChild(Enemy.createNewEnemy())
+		}, 3000);
 	});
 })();
+
+export function stopGame() {
+	enemyTicker.stop();
+	clearInterval(enemySpawnerInterval)
+}
