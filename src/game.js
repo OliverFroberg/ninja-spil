@@ -177,7 +177,7 @@ class Game {
 
 						let timeToNinjaIsHurt = setTimeout(() => {
 							ninja.stop();
-							ninja.texture = PIXI.Texture.from(
+							ninja.texture = Texture.from(
 								"../assets/images/ninja-hurt.png"
 							);
 							gsap.to(ninja, {
