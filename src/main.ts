@@ -73,6 +73,12 @@ let enemySpawnerInterval: number;
 	//========================== Begin game ==========================
 
 	play.on("pointerup", event => {
+		// Plays hit sound when play button goes away
+		setTimeout(() => {
+			ninja.hitSound.play()
+		}, 500)
+
+		// Makes the play button unclickable after being clicked
 		event.currentTarget.eventMode = "passive"
 		// Animate play button out of screen
 		gsap.to(event.currentTarget, {
@@ -96,9 +102,15 @@ let enemySpawnerInterval: number;
 		});
 
 		// Enemy spawner
-		enemySpawnerInterval = setInterval(() => {
+		let lastSpawnDelay = 3000 // Starting delay
+		function startSpawningEnemies() {
 			scene.addChild(Enemy.createNewEnemy())
-		}, 1000);
+			enemySpawnerInterval = setTimeout(() => {
+				lastSpawnDelay = Math.max(lastSpawnDelay * 0.975, 100)
+				startSpawningEnemies()
+			}, lastSpawnDelay);
+		}
+		startSpawningEnemies()
 	});
 })();
 

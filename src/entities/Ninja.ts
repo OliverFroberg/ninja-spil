@@ -2,6 +2,7 @@ import gsap from "gsap";
 import Entity from "./Entity.ts";
 import {AnimatedSprite, Point, Sprite} from "pixi.js";
 import {assets, stopGame} from "../main.ts";
+import {Howl} from "howler";
 
 /**
  * This entity represents the player character.
@@ -11,9 +12,12 @@ export default class Ninja extends Entity {
 	private readonly kickSprite: Sprite;
 	private readonly hurtSprite: Sprite;
 
-	private declare defaultPosition: Point;
+	private defaultPosition: Point;
 	public doingAttack = false;
 	public attacking = false;
+
+	public readonly hitSound: Howl;
+	public readonly attackGrunts: Howl[] = [];
 
 	constructor() {
 		super();
@@ -35,6 +39,21 @@ export default class Ninja extends Entity {
 
 		this.hurtSprite = new Sprite(assets.ninjaHurt);
 		this.hurtSprite.anchor.set(0.5);
+
+		// Setup attack sound
+		this.hitSound = new Howl({
+			src: ["/assets/sound/effekt_swish.mp3"],
+			volume: 0.2,
+		});
+
+		// Setup attack grunts
+		const soundArray = ["ia1", "ia2"];
+		soundArray.forEach(value => {
+			this.attackGrunts.push(new Howl({
+				src: [`/assets/sound/${value}.mp3`],
+				volume: 0.1,
+			}));
+		});
 	}
 
 	private currentAnimation: gsap.core.Tween | undefined;
@@ -52,6 +71,11 @@ export default class Ninja extends Entity {
 
 		this.sprite = this.kickSprite;
 		this.doingAttack = true;
+
+		// Play sounds
+		this.hitSound.play();
+		this.attackGrunts[Math.floor(Math.random() * this.attackGrunts.length)].play();
+
 		this.currentAnimation = gsap.to(this.position, {
 			duration: 0.2,
 			x: x,
@@ -74,14 +98,14 @@ export default class Ninja extends Entity {
 
 					onComplete: () => {
 						this.doingAttack = false;
-					}
+					},
 				});
 			},
 		});
 	}
 
 	damage() {
-		this.sprite = this.hurtSprite
-		stopGame()
+		this.sprite = this.hurtSprite;
+		stopGame();
 	}
 }
